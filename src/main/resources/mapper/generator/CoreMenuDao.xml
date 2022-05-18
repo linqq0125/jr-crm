@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.corp.jr.dao.generator.CoreMenuDao">
+  <resultMap id="BaseResultMap" type="com.corp.jr.model.generator.CoreMenu">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="CODE" jdbcType="VARCHAR" property="code" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="FUNCTION_ID" jdbcType="INTEGER" property="functionId" />
+    <result column="TYPE" jdbcType="VARCHAR" property="type" />
+    <result column="PARENT_MENU_ID" jdbcType="INTEGER" property="parentMenuId" />
+    <result column="SEQ" jdbcType="INTEGER" property="seq" />
+    <result column="ICON" jdbcType="VARCHAR" property="icon" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, CODE, `NAME`, CREATE_TIME, FUNCTION_ID, `TYPE`, PARENT_MENU_ID, SEQ, ICON
+  </sql>
+  <select id="selectByExample" parameterType="com.corp.jr.model.generator.CoreMenuExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from core_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from core_menu
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from core_menu
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.corp.jr.model.generator.CoreMenuExample">
+    delete from core_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="ID" keyProperty="id" parameterType="com.corp.jr.model.generator.CoreMenu" useGeneratedKeys="true">
+    insert into core_menu (CODE, `NAME`, CREATE_TIME, 
+      FUNCTION_ID, `TYPE`, PARENT_MENU_ID, 
+      SEQ, ICON)
+    values (#{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{functionId,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{parentMenuId,jdbcType=INTEGER}, 
+      #{seq,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="ID" keyProperty="id" parameterType="com.corp.jr.model.generator.CoreMenu" useGeneratedKeys="true">
+    insert into core_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        CODE,
+      </if>
+      <if test="name != null">
+        `NAME`,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="functionId != null">
+        FUNCTION_ID,
+      </if>
+      <if test="type != null">
+        `TYPE`,
+      </if>
+      <if test="parentMenuId != null">
+        PARENT_MENU_ID,
+      </if>
+      <if test="seq != null">
+        SEQ,
+      </if>
+      <if test="icon != null">
+        ICON,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="functionId != null">
+        #{functionId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="parentMenuId != null">
+        #{parentMenuId,jdbcType=INTEGER},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.corp.jr.model.generator.CoreMenuExample" resultType="java.lang.Long">
+    select count(*) from core_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update core_menu
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.code != null">
+        CODE = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        `NAME` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.functionId != null">
+        FUNCTION_ID = #{record.functionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.type != null">
+        `TYPE` = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentMenuId != null">
+        PARENT_MENU_ID = #{record.parentMenuId,jdbcType=INTEGER},
+      </if>
+      <if test="record.seq != null">
+        SEQ = #{record.seq,jdbcType=INTEGER},
+      </if>
+      <if test="record.icon != null">
+        ICON = #{record.icon,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update core_menu
+    set ID = #{record.id,jdbcType=INTEGER},
+      CODE = #{record.code,jdbcType=VARCHAR},
+      `NAME` = #{record.name,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      FUNCTION_ID = #{record.functionId,jdbcType=INTEGER},
+      `TYPE` = #{record.type,jdbcType=VARCHAR},
+      PARENT_MENU_ID = #{record.parentMenuId,jdbcType=INTEGER},
+      SEQ = #{record.seq,jdbcType=INTEGER},
+      ICON = #{record.icon,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.corp.jr.model.generator.CoreMenu">
+    update core_menu
+    <set>
+      <if test="code != null">
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `NAME` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="functionId != null">
+        FUNCTION_ID = #{functionId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        `TYPE` = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="parentMenuId != null">
+        PARENT_MENU_ID = #{parentMenuId,jdbcType=INTEGER},
+      </if>
+      <if test="seq != null">
+        SEQ = #{seq,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null">
+        ICON = #{icon,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.corp.jr.model.generator.CoreMenu">
+    update core_menu
+    set CODE = #{code,jdbcType=VARCHAR},
+      `NAME` = #{name,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      FUNCTION_ID = #{functionId,jdbcType=INTEGER},
+      `TYPE` = #{type,jdbcType=VARCHAR},
+      PARENT_MENU_ID = #{parentMenuId,jdbcType=INTEGER},
+      SEQ = #{seq,jdbcType=INTEGER},
+      ICON = #{icon,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

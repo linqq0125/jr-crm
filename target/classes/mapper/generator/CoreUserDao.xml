@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.corp.jr.dao.generator.CoreUserDao">
+  <resultMap id="BaseResultMap" type="com.corp.jr.model.generator.CoreUser">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="CODE" jdbcType="VARCHAR" property="code" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="ORG_ID" jdbcType="INTEGER" property="orgId" />
+    <result column="STATE" jdbcType="VARCHAR" property="state" />
+    <result column="JOB_TYPE1" jdbcType="VARCHAR" property="jobType1" />
+    <result column="DEL_FLAG" jdbcType="TINYINT" property="delFlag" />
+    <result column="update_Time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="JOB_TYPE0" jdbcType="VARCHAR" property="jobType0" />
+    <result column="attachment_id" jdbcType="VARCHAR" property="attachmentId" />
+    <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, CODE, `NAME`, `PASSWORD`, CREATE_TIME, ORG_ID, `STATE`, JOB_TYPE1, DEL_FLAG, 
+    update_Time, JOB_TYPE0, attachment_id
+  </sql>
+  <select id="selectByExample" parameterType="com.corp.jr.model.generator.CoreUserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from core_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--select -->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from core_user-->
+    <!--where ID = #{id,jdbcType=INTEGER}-->
+
+    select u.*,o.name AS org_name,r.name AS role_name
+    from core_user u
+    left join core_org o on u.org_id=o.id
+    left join core_role r on u.code=r.code
+    where u.ID = #{id,jdbcType=INTEGER} and u.del_flag = 0
+
+  </select>
+
+  <select id="queryUsersMessage" parameterType="com.corp.jr.web.query.UserQuery" resultMap="BaseResultMap">
+    select u.*,o.name AS org_name,r.name AS role_name
+    from core_user u
+    left join core_org o on u.org_id=o.id
+    left join core_role r on u.code=r.code
+    where 1=1 and u.del_flag = 0
+    <if test="params.orgId != null">
+      and  u.org_id = #{params.orgId,jdbcType=INTEGER}
+    </if>
+    <if test="params.code != null">
+    and  u.code like concat('%',#{params.code,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="params.name != null">
+    and  u.name like  concat('%',#{params.name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="params.state != null">
+    and  u.state = = #{params.state,jdbcType=VARCHAR}
+    </if>
+    <if test="params.jobType0 != null">
+    and  u.job_type0= #{params.jobType0,jdbcType=VARCHAR}
+    </if>
+    <if test="params.jobType1 != null">
+    and  u.job_type1= #{params.jobType1,jdbcType=VARCHAR}
+    </if>
+    <if test="params.createDateRange != null">
+    and  u.create_time <![CDATA[>=]]> #{params.createDateRange,jdbcType=TIMESTAMP}
+     and  u.create_time <![CDATA[<]]> #{nextDay(params.createDateRange),jdbcType=TIMESTAMP}
+    </if>
+    order by id
+  </select>
+
+  <select id="userLogin" parameterType="com.corp.jr.model.generator.CoreUser" resultMap="BaseResultMap">
+    SELECT * from core_user WHERE PASSWORD = #{password,jdbcType=VARCHAR} AND code=#{code,jdbcType=VARCHAR}
+  </select>
+
+  <select id="existUser" parameterType="java.lang.String" resultType="int">
+    SELECT count(1) from core_user WHERE code=#{code,jdbcType=VARCHAR}
+  </select>
+
+
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    update core_user set del_flag=1
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <delete id="deleteByExample" parameterType="com.corp.jr.model.generator.CoreUserExample">
+    delete from core_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="ID" keyProperty="id" parameterType="com.corp.jr.model.generator.CoreUser" useGeneratedKeys="true">
+    insert into core_user (CODE, `NAME`, `PASSWORD`,
+      CREATE_TIME, ORG_ID, `STATE`, 
+      JOB_TYPE1, DEL_FLAG, update_Time, 
+      JOB_TYPE0, attachment_id)
+    values (#{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{orgId,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, 
+      #{jobType1,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{jobType0,jdbcType=VARCHAR}, #{attachmentId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="ID" keyProperty="id" parameterType="com.corp.jr.model.generator.CoreUser" useGeneratedKeys="true">
+    insert into core_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        CODE,
+      </if>
+      <if test="name != null">
+        `NAME`,
+      </if>
+      <if test="password != null">
+        `PASSWORD`,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="orgId != null">
+        ORG_ID,
+      </if>
+      <if test="state != null">
+        `STATE`,
+      </if>
+      <if test="jobType1 != null">
+        JOB_TYPE1,
+      </if>
+      <if test="delFlag != null">
+        DEL_FLAG,
+      </if>
+      <if test="updateTime != null">
+        update_Time,
+      </if>
+      <if test="jobType0 != null">
+        JOB_TYPE0,
+      </if>
+      <if test="attachmentId != null">
+        attachment_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="jobType1 != null">
+        #{jobType1,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobType0 != null">
+        #{jobType0,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentId != null">
+        #{attachmentId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.corp.jr.model.generator.CoreUserExample" resultType="java.lang.Long">
+    select count(*) from core_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update core_user
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.code != null">
+        CODE = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        `NAME` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        `PASSWORD` = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.orgId != null">
+        ORG_ID = #{record.orgId,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null">
+        `STATE` = #{record.state,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jobType1 != null">
+        JOB_TYPE1 = #{record.jobType1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.delFlag != null">
+        DEL_FLAG = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_Time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.jobType0 != null">
+        JOB_TYPE0 = #{record.jobType0,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attachmentId != null">
+        attachment_id = #{record.attachmentId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update core_user
+    set ID = #{record.id,jdbcType=INTEGER},
+      CODE = #{record.code,jdbcType=VARCHAR},
+      `NAME` = #{record.name,jdbcType=VARCHAR},
+      `PASSWORD` = #{record.password,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      ORG_ID = #{record.orgId,jdbcType=INTEGER},
+      `STATE` = #{record.state,jdbcType=VARCHAR},
+      JOB_TYPE1 = #{record.jobType1,jdbcType=VARCHAR},
+      DEL_FLAG = #{record.delFlag,jdbcType=TINYINT},
+      update_Time = #{record.updateTime,jdbcType=TIMESTAMP},
+      JOB_TYPE0 = #{record.jobType0,jdbcType=VARCHAR},
+      attachment_id = #{record.attachmentId,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.corp.jr.model.generator.CoreUser">
+    update core_user
+    <set>
+      <if test="code != null">
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `NAME` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        `PASSWORD` = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgId != null">
+        ORG_ID = #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        `STATE` = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="jobType1 != null">
+        JOB_TYPE1 = #{jobType1,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        DEL_FLAG = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="updateTime != null">
+        update_Time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobType0 != null">
+        JOB_TYPE0 = #{jobType0,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentId != null">
+        attachment_id = #{attachmentId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.corp.jr.model.generator.CoreUser">
+    update core_user
+    set CODE = #{code,jdbcType=VARCHAR},
+      `NAME` = #{name,jdbcType=VARCHAR},
+      `PASSWORD` = #{password,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      ORG_ID = #{orgId,jdbcType=INTEGER},
+      `STATE` = #{state,jdbcType=VARCHAR},
+      JOB_TYPE1 = #{jobType1,jdbcType=VARCHAR},
+      DEL_FLAG = #{delFlag,jdbcType=TINYINT},
+      update_Time = #{updateTime,jdbcType=TIMESTAMP},
+      JOB_TYPE0 = #{jobType0,jdbcType=VARCHAR},
+      attachment_id = #{attachmentId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
